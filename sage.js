@@ -313,15 +313,13 @@ Apache License
         , i = 0, len, item;
 
       if (data) {
-        // for (len = data.length; i < len; i++) {
-        //   item = data[i] = meta(data[i]);
-        //   if (json.rows && item.doc) item.doc = meta(item.doc);
-        // }
         data = [].slice.call(data);
         extend(data.__proto__ = [], json, json.hits).json = json;
+        for (len = data.length; i < len; i++) {
+          item = data[i] = meta(data[i]);
+        }
       } else {
-        // data = meta(json);
-        data = json
+        data = meta(json);
       }
 
       return data;
@@ -351,13 +349,13 @@ Apache License
 
     _meta: function(doc) {
       var hasId = !doc.id ^ !doc._id
-        , hasRev = !doc.rev ^ !doc._rev
+        , hasRev = !doc.version ^ !doc._version
         , proto;
 
       if (hasId || hasRev) {
         proto = extend(doc.__proto__ = {}, doc);
         if (hasId) proto._id = doc.id = doc._id || doc.id;
-        if (hasRev) proto._rev = doc.rev = doc._rev || doc.rev;
+        if (hasRev) proto._version = doc.version = doc._version || doc.version;
       }
 
       return doc;

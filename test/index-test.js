@@ -253,6 +253,8 @@ describe('Index', function(){
     expect(item).to.have.property('_type', 'type1');
     expect(item).to.have.property('_id', id);
     expect(item).to.have.property('_version', version);
+    expect(item.id).to.be(item._id);
+    expect(item.version).to.be(item._version);
   }
 
 });
