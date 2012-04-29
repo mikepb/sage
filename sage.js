@@ -5,7 +5,6 @@ Apache License
 */
 
 ;(function(
-  module,
   encodeURI,
   encodeURIComponent,
   decodeURIComponent
@@ -13,8 +12,6 @@ Apache License
 
   var global = this;
   var previousSage = this.sage; this.sage = sage;
-
-  if (module) module.exports = sage;
 
   /**
    * Copy properties from sources to target.
@@ -894,7 +891,6 @@ Apache License
   sage.Base;
 
 })(
-  typeof module != 'undefined' && module,
   encodeURI,
   encodeURIComponent,
   decodeURIComponent

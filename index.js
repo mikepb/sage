@@ -27,7 +27,8 @@ var request = require('request');
  * Sage library.
  */
 
-var sage = module.exports = require('./sage');
+require('./sage');
+var sage = module.exports = global.sage.noConflict();
 
 /**
  * Patchable prototypes.
