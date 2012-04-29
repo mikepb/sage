@@ -18,7 +18,7 @@ describe('Client', function(){
   });
 
   describe('#stats', function(){
-    it('shoud return node stats', function(done){
+    it('should return node stats', function(done){
       this.client.stats(function(err, body, status, headers, res){
         if (!err) {
           expect(body).to.have.property('cluster_name', 'elasticsearch');
@@ -31,7 +31,7 @@ describe('Client', function(){
   });
 
   describe('#health', function(){
-    it('shoud return cluster health', function(done){
+    it('should return cluster health', function(done){
       this.client.health(function(err, body, status, headers, res){
         if (!err) {
           expect(body).to.have.property('active_shards');
@@ -45,7 +45,7 @@ describe('Client', function(){
   });
 
   describe('#state', function(){
-    it('shoud return cluster state', function(done){
+    it('should return cluster state', function(done){
       this.client.state(function(err, body, status, headers, res){
         if (!err) {
           expect(body).to.have.property('cluster_name', 'elasticsearch');
@@ -59,7 +59,7 @@ describe('Client', function(){
   });
 
   describe('#nodes', function(){
-    it('shoud return cluster nodes', function(done){
+    it('should return cluster nodes', function(done){
       this.client.nodes(function(err, body, status, headers, res){
         if (!err) {
           shouldBeOk(body);
@@ -73,7 +73,7 @@ describe('Client', function(){
   });
 
   describe('#config', function(){
-    it('shoud return cluster settings', function(done){
+    it('should return cluster settings', function(done){
       this.client.config(function(err, body, status, headers, res){
         if (!err) {
           expect(body).to.have.property('persistent');
@@ -86,7 +86,7 @@ describe('Client', function(){
   });
 
   describe('#configure', function(){
-    it('shoud update cluster settings', function(done){
+    it('should update cluster settings', function(done){
       var settings = { transient: { index: { number_of_replicas: 1 } } };
       this.client.configure(settings, function(err, body, status, headers, res){
         if (!err) {
@@ -100,7 +100,7 @@ describe('Client', function(){
 
   describe('#template', function(){
 
-    it('shoud update template', function(done){
+    it('should update template', function(done){
       var template = {
         template: '*',
         mappings: {
@@ -109,7 +109,7 @@ describe('Client', function(){
           }
         }
       };
-      this.client.template('test', template, function(err, body, status, headers, res){
+      this.client.tmpl('test', template, function(err, body, status, headers, res){
         if (!err) {
           shouldBeOk(body);
           shouldHave2xxStatus(status);
@@ -118,8 +118,8 @@ describe('Client', function(){
       });
     });
 
-    it('shoud return template', function(done){
-      this.client.templ('test', function(err, body, status, headers, res){
+    it('should return template', function(done){
+      this.client.tmpl('test', function(err, body, status, headers, res){
         if (!err) {
           expect(body).to.have.property('test');
           expect(body.test).to.have.property('template', '*');
@@ -132,8 +132,8 @@ describe('Client', function(){
       });
     });
 
-    it('shoud delete template', function(done){
-      this.client.template('test', null, function(err, body, status, headers, res){
+    it('should delete template', function(done){
+      this.client.untmpl('test', function(err, body, status, headers, res){
         if (!err) {
           shouldBeOk(body);
           shouldHave2xxStatus(status);

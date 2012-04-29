@@ -544,27 +544,27 @@ Apache License
     },
 
     /**
-     * Get template.
+     * Get or update template.
      *
      * @param {Object} [template] Template.
      * @return This object for chaining.
      */
 
-    templ: function(/* [name], [query], [headers], [callback] */) {
-      var request = this._(arguments);
-      return request('GET', '_template/' + request.p);
+    tmpl: function(/* [name], [template], [query], [headers], [callback] */) {
+      var request = this._(arguments, 0, 1);
+      return request(request.b ? 'PUT' : 'GET', '_template/' + request.p);
     },
 
     /**
-     * Update or delete template.
+     * Delete template.
      *
      * @param {String} [template] Template.
      * @return This object for chaining.
      */
 
-    template: function(/* [name], [template], [query], [headers], [callback] */) {
-      var request = this._(arguments, 0, 1);
-      return request(request.b ? 'PUT' : 'DELETE', '_template/' + request.p);
+    untmpl: function(/* [name], [query], [headers], [callback] */) {
+      var request = this._(arguments);
+      return request('DELETE', '_template/' + request.p);
     }
 
   };
@@ -829,8 +829,7 @@ Apache License
     map: function(/* [mapping], [query], [headers], [callback] */) {
       var request = this._(arguments, 0, 1);
       return request(request.q ? 'PUT' : 'GET',
-        (request.p ? request.p + '/' : '') + '_mapping',
-        { q: request.b, b: request.q }
+        (request.p ? request.p + '/' : '') + '_mapping'
       );
     },
 
