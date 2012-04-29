@@ -4,8 +4,8 @@ if (typeof require != 'undefined') {
 
 (function(){
 
-  this.forceDestroyDB = function(done) {
-    this.db.destroy(function(){
+  this.forceDestroyIndex = function(done) {
+    this.index.destroy(function(){
       done();
     });
   };
