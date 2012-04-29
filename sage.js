@@ -214,17 +214,22 @@ Apache License
       var args = [].slice.call(arguments)
         , callback = isFunction(args[args.length - 1]) && args.pop()
         , headers = args[4] || {}
-        , path = args[1] ? '/' + args[1] : '';
+        , path = args[1] ? '/' + args[1] : ''
+        , data = args[3] || '';
+
+      if (data && !/\/_bulk$/.test(path)) {
+        data = JSON.stringify(args[3],
+          /^\/_mapping/.test(path) && this._replacer
+        );
+      }
 
       if (!('Content-Type' in headers)) headers['Content-Type'] = 'application/json';
 
       this._request(
-        args[0] || 'GET',                             // method
+        args[0] || 'GET',                          // method
         this.uri + path,                            // uri
         args[2],                                    // query
-        args[3] && JSON.stringify(args[3],
-          /^\/_mapping/.test(path) && this._replacer
-        ) || '',                                    // body
+        data,                                       // body
         headers,                                    // headers
         this.auth || {},                            // auth
         callback
@@ -285,7 +290,7 @@ Apache License
             }
           }
 
-          if (!err) data = self._response(data);
+          if (!err && data) data = self._response(data);
 
           callback(err, data, xhr.status, headers, xhr);
         }
@@ -303,22 +308,23 @@ Apache License
      */
 
     _response: function(json) {
-      // var data = json.rows || json.results || json.uuids || isArray(json) && json
-      //   , meta = this._meta
-      //   , i = 0, len, item;
+      var data = json.items || json.hits && json.hits.hits
+        , meta = this._meta
+        , i = 0, len, item;
 
-      // if (data) {
-      //   for (len = data.length; i < len; i++) {
-      //     item = data[i] = meta(data[i]);
-      //     if (json.rows && item.doc) item.doc = meta(item.doc);
-      //   }
-      //   data = [].slice.call(data);
-      //   extend(data.__proto__ = [], json).json = json;
-      // } else {
-      //   data = meta(json);
-      // }
+      if (data) {
+        // for (len = data.length; i < len; i++) {
+        //   item = data[i] = meta(data[i]);
+        //   if (json.rows && item.doc) item.doc = meta(item.doc);
+        // }
+        data = [].slice.call(data);
+        extend(data.__proto__ = [], json, json.hits).json = json;
+      } else {
+        // data = meta(json);
+        data = json
+      }
 
-      return json;
+      return data;
     },
 
     /**
@@ -550,7 +556,7 @@ Apache License
     },
 
     /**
-     * Update template.
+     * Update or delete template.
      *
      * @param {String} [template] Template.
      * @return This object for chaining.
@@ -631,51 +637,40 @@ Apache License
     },
 
     /**
-     * Get document metadata.
-     *
-     * @param {String} id Document ID.
-     * @param {Object} [query] HTTP query options.
-     * @param {Function} callback Callback function.
-     *   @param {Error|null} callback.error Error or `null` on success.
-     *   @param {Object|Object[]} [callback.body] Document metadata or array
-     *     of document metadata.
-     *     @param result.id Document ID.
-     *     @param result.rev Document revision.
-     *     @param [result.contentType] MIME content type. Only available when
-     *       getting metadata for single document.
-     *     @param [result.contentLength] Content length. Only available when
-     *       getting metadata for single document.
-     * @return This object for chaining.
-     */
-
-    head: function(/* [id], [query], [headers], callback */) {
-      var request = this._(arguments), callback = request.f
-        , id = request.p
-        , rev;
-
-      request.f = function(err, body, status, headers, xhr) {
-        callback(err, err ? body : {
-          _id: id, id: id,
-          _rev: rev = headers.etag && JSON.parse(headers.etag), rev: rev,
-          contentType: headers['content-type'],
-          contentLength: headers['content-length']
-        }, status, headers, xhr);
-      };
-
-      return request('HEAD');
-    },
-
-    /**
      * Post document to index.
      *
      * If documents have no ID, a document ID will be automatically generated
      * on the server.
      *
+     * Multiple documents can be posted to different indexes using the
+     * `_index`, `_type`, and `_id`, `_deleted`, and other elasticsearch
+     * fields beginning with `_`.
+     *
+     * @param {String} type Document type.
+     * @param {Object[]} docs Document or array of documents.
      * @return This object for chaining.
      */
 
-    post: function(doc /* [query], [headers], [callback] */) {
-      return this._(arguments, 1)('POST', 0, { b: doc });
+    post: function(type, docs /* [query], [headers], [callback] */) {
+      if (isArray(docs)) {
+        var buf = '', doc, meta, data, action
+          , i = 0, len = docs.length, key;
+
+        for (; i < len; i++) {
+          doc = docs[i], meta = {}, data = {};
+          action = meta[doc._deleted ? 'delete' : 'index'] = {};
+
+          for (key in doc) {
+            (key[0] == '_' ? action : data)[key] = doc[key];
+          }
+
+          buf += JSON.stringify(meta) + '\n' +
+                 JSON.stringify(doc) + '\n';
+        }
+
+        type += '/_bulk';
+      }
+      return this._(arguments, 2)('POST', type, { b: buf || docs });
     },
 
     /**
@@ -686,11 +681,10 @@ Apache License
      * @return This object for chaining.
      */
 
-    put: function(/* [doc], [query], [headers], [callback] */) {
-      var request = this._(arguments, 0, 1);
+    put: function(type, doc /* [query], [headers], [callback] */) {
       // prevent acidentally creating index
-      if (!request.p) throw new Error('missing id');
-      return request('PUT');
+      if (!type || !doc._id) throw new Error('missing type or id');
+      return this._(arguments, 0, 1)('PUT', type + '/' + doc._id);
     },
 
     /**
@@ -701,51 +695,46 @@ Apache License
      * @return This object for chaining.
      */
 
-    del: function(docs /* [query], [headers], [callback] */) {
+    del: function(type, docs /* [query], [headers], [callback] */) {
       if (isArray(docs)) {
-        var i = 0, len, doc;
+        var i = 0, len, doc, data = {};
         for (len = docs.length; i < len; i++) {
-          doc = docs[i], docs[i] = {
+          doc = docs[i], data[i] = {
             _id: doc._id || doc.id,
-            _rev: doc._rev || doc.rev,
+            _version: doc._version || doc.version,
             _deleted: true
           };
         }
-        return this.bulk.apply(this, arguments);
+        docs = data;
+        return this.post.apply(this, arguments);
       } else {
-        var request = this._(arguments, 0, 1);
-        // prevent acidentally deleting database
-        if (!request.p) throw new Error('missing id');
-        return request('DELETE');
+        // prevent acidentally creating index
+        if (!type || !docs._id) throw new Error('missing type or id');
+        return this._(arguments, 2)('DELETE', type + '/' + docs._id);
       }
     },
 
     /**
      * Fetch documents.
      *
-     * @param {String} [typeAndId] type with document ID.
+     * @param {String} [type] type.
      * @param {String} [docs] Document descriptors.
      * @return This object for chaining.
      */
 
-    all: function(/* [typeAndId], [docs], [query], [headers], [callback] */) {
+    all: function(/* [type], [docs], [query], [headers], [callback] */) {
       return this._(arguments, 0, 1)('GET');
     },
 
     /**
-     * Update or delete documents in bulk.
+     * Search index.
      *
-     * @param {Object[]} docs Array of documents to insert or update.
-     *   @param {String} [doc._id] Document ID.
-     *   @param {String} [doc._index] Index name.
-     *   @param {String} [doc._type] Index type.
-     *   @param {Boolean} [doc._deleted] Flag indicating whether this document
-     *     should be deleted.
+     * @param search Search body.
      * @return This object for chaining.
      */
 
-    bulk: function(/* [type], [docs], [query], [headers], [callback] */) {
-      throw new Error('not implemented');
+    find: function(/* [search], [query], [headers], [callback] */) {
+      return this._(arguments, 0, 1)('POST', '_search');
     },
 
     /**
@@ -839,8 +828,9 @@ Apache License
 
     map: function(/* [mapping], [query], [headers], [callback] */) {
       var request = this._(arguments, 0, 1);
-      return request(request.b ? 'PUT' : 'GET',
-        (request.p ? request.p + '/' : '') + '_mapping'
+      return request(request.q ? 'PUT' : 'GET',
+        (request.p ? request.p + '/' : '') + '_mapping',
+        { q: request.b, b: request.q }
       );
     },
 

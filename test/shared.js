@@ -10,6 +10,18 @@ if (typeof require != 'undefined') {
     });
   };
 
+  this.createIndex = function(done) {
+    this.index.create(done);
+  };
+
+  this.destroyIndex = function(done) {
+    this.index.destroy(done);
+  };
+
+  this.refreshIndex = function(done) {
+    this.index.refresh(done);
+  };
+
   this.shouldBeOk = function(body) {
     expect(body).to.have.property('ok', true);
   };
