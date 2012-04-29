@@ -1,0 +1,27 @@
+{
+  "name": "sage",
+  "description": "ElasticSearch for node and the browser",
+  "version": "0.0.0",
+  "author": "Michael Phan-Ba <michael@mikepb.com>",
+  "homepage": "https://github.com/mikepb/sage",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mikepb/sage.git"
+  },
+  "main": ".",
+  "engines": {
+    "node": "~0.6.15"
+  },
+  "dependencies": {
+    "request": "~2.9.202"
+  },
+  "devDependencies": {
+    "expect.js": "~0.1.2",
+    "express": "~3.0",
+    "mocha": "~1.0.0",
+    "zombie": "~0.13.2"
+  },
+  "scripts": {
+    "test": "make test"
+  }
+}
