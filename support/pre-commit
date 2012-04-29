@@ -52,10 +52,4 @@ fi
 # Exec tests before commit
 echo "Running tests"
 exec make test
-
-# Make minified version
-echo "Building minified version"
-exec make
-echo -n "Minified to "
-exec gzip sage.min.js -c | wc -c | sed 's/ *//'
 exec git stage sage.min.js
