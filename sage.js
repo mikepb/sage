@@ -310,14 +310,12 @@ Apache License
     _response: function(json) {
       var data = json.items || json.hits && json.hits.hits
         , meta = this._meta
-        , i = 0, len, item;
+        , i = 0, len;
 
       if (data) {
         data = [].slice.call(data);
         extend(data.__proto__ = [], json, json.hits).json = json;
-        for (len = data.length; i < len; i++) {
-          item = data[i] = meta(data[i]);
-        }
+        for (len = data.length; i < len; i++) data[i] = meta(data[i]);
       } else {
         data = meta(json);
       }
