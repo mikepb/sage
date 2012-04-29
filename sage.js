@@ -258,7 +258,7 @@ Apache License
         for (key in query) {
           qval.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]));
         }
-        if (qval.length) uri += '?' + qval.join('&');
+        uri += '?' + qval.join('&');
       }
 
       xhr.open(method, uri, true, auth.user, auth.pass);
@@ -404,7 +404,7 @@ Apache License
 
         self.request(
           method,
-          path || request.p,
+          path || request.p || '',
           'q' in options ? options.q : request.q,
           'b' in options ? options.b : request.b,
           'h' in options ? options.h : request.h,
@@ -419,7 +419,7 @@ Apache License
 
       request.f = isFunction(args[args.length - 1]) && args.pop();
       request.p = isString(args[0]) && encodeURI(args.shift()) ||
-                  isArray(args[0]) && encodeURI(args.shift().join(','));
+                  isArray(args[0]) && encodeURI(args.shift().join(',')) || '';
       request.q = args[withDoc ? 1 : 0] || {};
       request.h = args[withDoc ? 2 : 1] || {};
 
@@ -470,6 +470,20 @@ Apache License
     },
 
     /**
+     * Get nodes stats.
+     *
+     * @param {String[]} nodes Node name or array of node names.
+     * @return This object for chaining.
+     */
+
+    stats: function(/* [nodes], [query], [headers], [callback] */) {
+      var request = this._(arguments);
+      return request('GET',
+        '_nodes' + (request.p ? '/' + request.p : '') + '/stats'
+      );
+    },
+
+    /**
      * Get cluster health.
      *
      * @return This object for chaining.
@@ -487,9 +501,7 @@ Apache License
 
     state: function(/* [nodes], [query], [headers], [callback] */) {
       var request = this._(arguments);
-      return request('GET',
-        '_cluster/state' + (request.p ? '/' + request.p : '')
-      );
+      return request('GET', '_cluster/state/' + (request.p || ''));
     },
 
     /**
@@ -501,61 +513,52 @@ Apache License
 
     nodes: function(/* [nodes], [query], [headers], [callback] */) {
       var request = this._(arguments);
-      return request('GET',
-        '_nodes' + (request.p ? '/' + request.p : '')
-      );
+      return request('GET', '_nodes/' + (request.p || ''));
     },
 
     /**
-     * Get nodes stats.
+     * Get cluster settings.
      *
-     * @param {String[]} nodes Node name or array of node names.
      * @return This object for chaining.
      */
 
-    stats: function(/* [nodes], [query], [headers], [callback] */) {
+    config: function(/* [query], [headers], [callback] */) {
+      return this._(arguments)('GET', '_cluster/settings');
+    },
+
+    /**
+     * Update cluster settings.
+     *
+     * @param {Object} [settings] Settings.
+     * @return This object for chaining.
+     */
+
+    configure: function(settings /* [query], [headers], [callback] */) {
+      return this._(arguments, 1)('PUT', '_cluster/settings', { b: settings });
+    },
+
+    /**
+     * Get template.
+     *
+     * @param {Object} [template] Template.
+     * @return This object for chaining.
+     */
+
+    templ: function(/* [name], [query], [headers], [callback] */) {
       var request = this._(arguments);
-      return request('GET',
-        '_nodes' + (request.p ? '/' + request.p : '') + '/stats'
-      );
+      return request('GET', '_template/' + request.p);
     },
 
     /**
-     * Shutdown node(s).
+     * Update template.
      *
-     * @param {String[]} nodes Node name or array of node names.
-     * @return This object for chaining.
-     */
-
-    shutdown: function(/* [nodes], [query], [headers], [callback] */) {
-      var request = this._(arguments);
-      return request('POST',
-        '_nodes' + (request.p ? '/' + request.p : '') + '/_shutdown'
-      );
-    },
-
-    /**
-     * Get or set settings.
-     *
-     * @param {String} [settings] Settings.
-     * @return This object for chaining.
-     */
-
-    settings: function(/* [settings], [query], [headers], [callback] */) {
-      var request = this._(arguments, 0, 1);
-      return request(request.b ? 'PUT' : 'GET', '_cluster/settings');
-    },
-
-    /**
-     * Get or set template.
-     *
-     * @param {String} [settings] Settings.
+     * @param {String} [template] Template.
      * @return This object for chaining.
      */
 
     template: function(/* [name], [template], [query], [headers], [callback] */) {
       var request = this._(arguments, 0, 1);
-      return request(request.b ? 'PUT' : 'GET', '_template/' + request.p);
+      return request(request.b ? 'PUT' : 'DELETE', '_template/' + request.p);
     }
 
   };
