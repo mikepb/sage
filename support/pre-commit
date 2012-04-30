@@ -52,4 +52,3 @@ fi
 # Exec tests before commit
 echo "Running tests"
 exec make test
-git add sage.min.js

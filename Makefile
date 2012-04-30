@@ -13,5 +13,6 @@ test: $(MINJS)
 
 $(MINJS): $(OUTJS)
 	uglifyjs $(OUTJS) > $(MINJS)
+	@git add $(MINJS)
 
 .PHONY: build test
