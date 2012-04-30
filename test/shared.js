@@ -6,7 +6,7 @@ if (typeof require != 'undefined') {
 (function(){
 
   this.sageFactory = function() {
-    this.client = new sage.Client('http://127.0.0.1:9200');
+    this.client = sage('http://127.0.0.1:9200');
     this.index = this.client.index('sage-test');
     this.type = this.index.type('type1');
   };

@@ -174,10 +174,9 @@ Apache License
     var match;
 
     if (uri) {
-      uri = uri.replace(/\/+/g, '\/').replace(/\/+$/g, '');
       if (match = /^(https?:\/\/)(?:([^@:]+):([^@]+)@)?([^\/]+)(.*)$/.exec(uri)) {
         return {
-          host: match[1] + match[4],
+          host: match[1] + match[4].replace(/\/+/g, '\/').replace(/\/+$/g, ''),
           user: match[2] && decodeURIComponent(match[2]),
           pass: match[3] && decodeURIComponent(match[3])
         };
