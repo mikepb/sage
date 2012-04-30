@@ -1,4 +1,4 @@
-# sage
+# sage [![Build Status](https://secure.travis-ci.org/mikepb/sage.png)](http://travis-ci.org/mikepb/sage)
 
 ElasticSearch for node and the browser (experimental)
 
