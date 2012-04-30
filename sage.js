@@ -471,6 +471,30 @@ Apache License
     },
 
     /**
+     * Configure or get ElasticSearch river info.
+     *
+     * @param {String} name River name.
+     * @param {Object} [meta] River configuration.
+     * @return {Index} Index object.
+     */
+
+    river: function(name /* [meta], [query], [headers], [callback] */) {
+      var request = this._(arguments, 1, 1);
+      return request(request.b ? 'PUT' : 'GET', '_river/' + name + '/_meta');
+    },
+
+    /**
+     * Remove river.
+     *
+     * @param {String} name River name.
+     * @return {Index} Index object.
+     */
+
+    unriver: function(name /* [query], [headers], [callback] */) {
+      return this._(arguments, 1)('DELETE', '_river/' + name);
+    },
+
+    /**
      * Get nodes stats.
      *
      * @param {String[]} nodes Node name or array of node names.

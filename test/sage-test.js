@@ -6,10 +6,6 @@ if (typeof require != 'undefined') {
 
 describe('sage', function(){
 
-  beforeEach(function(){
-    this.client = new sage.Client('http://127.0.0.1:9200');
-  });
-
   if (fs) describe('package', function(){
 
     before(function(done){
