@@ -3,7 +3,7 @@ if (typeof require != 'undefined') {
     , expect = require('expect.js');
 }
 
-describe('Index', function(){
+describe('Type', function(){
 
   before(sageFactory);
   before(forceDestroyIndex);
