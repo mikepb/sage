@@ -73,6 +73,17 @@ describe('Client', function(){
   });
 
   describe('#config', function(){
+
+    it('should update cluster settings', function(done){
+      var settings = { transient: { index: { number_of_replicas: 1 } } };
+      this.client.config(settings, function(err, body, status, headers, res){
+        if (!err) {
+          shouldHave2xxStatus(status);
+        }
+        done(err);
+      });
+    });
+
     it('should return cluster settings', function(done){
       this.client.config(function(err, body, status, headers, res){
         if (!err) {
@@ -83,22 +94,11 @@ describe('Client', function(){
         done(err);
       });
     });
-  });
 
-  describe('#configure', function(){
-    it('should update cluster settings', function(done){
-      var settings = { transient: { index: { number_of_replicas: 1 } } };
-      this.client.configure(settings, function(err, body, status, headers, res){
-        if (!err) {
-          shouldHave2xxStatus(status);
-        }
-        done(err);
-      });
-    });
   });
 
 
-  describe('#template', function(){
+  describe('#tmpl', function(){
 
     it('should update template', function(done){
       var template = {

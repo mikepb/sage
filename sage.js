@@ -542,24 +542,14 @@ Apache License
     },
 
     /**
-     * Get cluster settings.
+     * Get or update cluster settings.
      *
      * @return This object for chaining.
      */
 
-    config: function(/* [query], [headers], [callback] */) {
-      return this._(arguments)('GET', '_cluster/settings');
-    },
-
-    /**
-     * Update cluster settings.
-     *
-     * @param {Object} [settings] Settings.
-     * @return This object for chaining.
-     */
-
-    configure: function(settings /* [query], [headers], [callback] */) {
-      return this._(arguments, 1)('PUT', '_cluster/settings', { b: settings });
+    config: function(/* [settings], [query], [headers], [callback] */) {
+      var request = this._(arguments, 0, 1);
+      return request(request.b ? 'PUT' : 'GET', '_cluster/settings');
     },
 
     /**
