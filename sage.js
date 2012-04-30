@@ -449,7 +449,7 @@ Apache License
   sage.Client = function(uri, auth) {
     this.uri = uri;
     this.auth = auth;
-    this._index = {};
+    this._indexes = {};
   };
 
   sage.Client.prototype = {
@@ -458,17 +458,17 @@ Apache License
      * Select index to manipulate.
      *
      * @param {String[]} name Index name.
-     * @return {Database} Database object.
+     * @return {Index} Index object.
      */
 
     index: function(name) {
-      var index = this._index;
+      var indexes = this._indexes;
 
       if (isString(name)) name = name.split(',');
       name.sort();
       name = name.join(',');
 
-      return index[name] || (index[name] = new sage.Index(this, name, this.auth));
+      return indexes[name] || (indexes[name] = new sage.Index(this, name, this.auth));
     },
 
     /**
@@ -566,24 +566,36 @@ Apache License
   };
 
   /**
-   * Methods for ElasticSearch database.
+   * Methods for ElasticSearch index.
    *
-   * @param {Client} client Clerk client.
-   * @param {String} name Database name.
+   * @param {Client} client Sage client.
+   * @param {String} name Index name.
    * @param {Object} [auth] Authentication options.
    *   @param {String} [auth.user] Username.
    *   @param {String} [auth.pass] Password.
-   * @return This object for chaining.
    */
 
   sage.Index = function(client, name, auth) {
     this.client = client;
     this.name = name;
-    this.uri = client.uri + '/' + encodeURIComponent(name);
+    this.uri = client.uri + (name ? '/' + encodeURIComponent(name) : '');
     this.auth = auth;
+    this._types = {};
   };
 
   sage.Index.prototype = {
+
+    /**
+     * Select type to manipulate.
+     *
+     * @param {String[]} name Type name.
+     * @return {Index} Index object.
+     */
+
+    type: function(name) {
+      var types = this._types;
+      return types[name] || (types[name] = new sage.Type(this, name, this.auth));
+    },
 
     /**
      * Create index.
@@ -622,95 +634,6 @@ Apache License
     },
 
     /**
-     * Fetch document.
-     *
-     * @param {String} [typeAndId] type with document ID.
-     * @return This object for chaining.
-     */
-
-    get: function(/* [typeAndId], [query], [headers], [callback] */) {
-      return this._(arguments)('GET');
-    },
-
-    /**
-     * Post document to index.
-     *
-     * If documents have no ID, a document ID will be automatically generated
-     * on the server.
-     *
-     * Multiple documents can be posted to different indexes using the
-     * `_index`, `_type`, and `_id`, `_deleted`, and other elasticsearch
-     * fields beginning with `_`.
-     *
-     * @param {String} type Document type.
-     * @param {Object[]} docs Document or array of documents.
-     * @return This object for chaining.
-     */
-
-    post: function(type, docs /* [query], [headers], [callback] */) {
-      if (isArray(docs)) {
-        var buf = '', doc, meta, data, action
-          , i = 0, len = docs.length, key;
-
-        for (; i < len; i++) {
-          doc = docs[i], meta = {}, data = {};
-          action = meta[doc._deleted ? 'delete' : 'index'] = {};
-
-          for (key in doc) {
-            (key[0] == '_' ? action : data)[key] = doc[key];
-          }
-
-          buf += JSON.stringify(meta) + '\n' +
-                 JSON.stringify(doc) + '\n';
-        }
-
-        type += '/_bulk';
-      }
-      return this._(arguments, 2)('POST', type, { b: buf || docs });
-    },
-
-    /**
-     * Put document in index.
-     *
-     * @param {Object} doc Document data. Requires `id` and `rev`.
-     * @param {String} [options] Options.
-     * @return This object for chaining.
-     */
-
-    put: function(type, doc /* [query], [headers], [callback] */) {
-      // prevent acidentally creating index
-      if (!type || !doc._id) throw new Error('missing type or id');
-      return this._(arguments, 0, 1)('PUT', type + '/' + doc._id);
-    },
-
-    /**
-     * Delete document(s).
-     *
-     * @param {String} doc Document or document ID.
-     * @param {Object} [query] HTTP query options.
-     * @return This object for chaining.
-     */
-
-    del: function(type, docs /* [query], [headers], [callback] */) {
-      if (isArray(docs)) {
-        var i = 0, len, doc, data = {};
-        for (len = docs.length; i < len; i++) {
-          doc = docs[i], data[i] = {
-            _id: doc._id || doc.id,
-            _version: doc._version || doc.version,
-            _deleted: true
-          };
-        }
-        docs = data;
-        return this.post.apply(this, arguments);
-      } else {
-        // prevent acidentally creating index
-        if (!type || !docs._id) throw new Error('missing type or id');
-        return this._(arguments, 2)('DELETE', type + '/' + docs._id);
-      }
-    },
-
-    /**
      * Fetch documents.
      *
      * @param {String} [type] type.
@@ -719,7 +642,7 @@ Apache License
      */
 
     all: function(/* [type], [docs], [query], [headers], [callback] */) {
-      return this._(arguments, 0, 1)('GET');
+      return this._(arguments, 0, 1)('GET', '_mget');
     },
 
     /**
@@ -874,8 +797,123 @@ Apache License
 
   };
 
+  /**
+   * Methods for ElasticSearch type.
+   *
+   * @param {Index} index Sage index.
+   * @param {String} name Type name.
+   * @param {Object} [auth] Authentication options.
+   *   @param {String} [auth.user] Username.
+   *   @param {String} [auth.pass] Password.
+   * @return new Type
+   */
+
+  sage.Type = function(index, name, auth) {
+    this.index = index;
+    this.name = name;
+    this.uri = index.uri + (name ? '/' + encodeURIComponent(name) : '');
+    this.auth = auth;
+  };
+
+  sage.Type.prototype = {
+
+    /**
+     * Fetch document.
+     *
+     * @param {String} [typeAndId] type with document ID.
+     * @return This object for chaining.
+     */
+
+    get: function(/* [id], [query], [headers], [callback] */) {
+      return this._(arguments)('GET');
+    },
+
+    /**
+     * Post document to index.
+     *
+     * If documents have no ID, a document ID will be automatically generated
+     * on the server.
+     *
+     * Multiple documents can be posted to different indexes using the
+     * `_index`, `_type`, and `_id`, `_deleted`, and other elasticsearch
+     * fields beginning with `_`.
+     *
+     * @param {String} type Document type.
+     * @param {Object[]} docs Document or array of documents.
+     * @return This object for chaining.
+     */
+
+    post: function(docs /* [query], [headers], [callback] */) {
+      var request = this._(arguments, 1)
+        , doc, meta, data, action
+        , buf = '', i, len, key;
+
+      if (isArray(docs)) {
+        request.p = '_bulk';
+        for (i = 0, len = docs.length; i < len; i++) {
+          doc = docs[i], meta = {}, data = {};
+          action = meta[doc._deleted ? 'delete' : 'index'] = {};
+
+          for (key in doc) {
+            (key[0] == '_' ? action : data)[key] = doc[key];
+          }
+
+          buf += JSON.stringify(meta) + '\n' +
+                 JSON.stringify(doc) + '\n';
+        }
+      }
+
+      return request('POST', 0, { b: buf || docs });
+    },
+
+    /**
+     * Put document in index.
+     *
+     * @param {Object} doc Document data. Requires `id` and `rev`.
+     * @param {String} [options] Options.
+     * @return This object for chaining.
+     */
+
+    put: function(doc /* [query], [headers], [callback] */) {
+      // prevent acidentally creating index
+      if (!this.name || !doc._id) throw new Error('missing type or id');
+      return this._(arguments, 1)('PUT', doc._id, { b: doc });
+    },
+
+    /**
+     * Delete document(s).
+     *
+     * @param {String} doc Document or document ID.
+     * @param {Object} [query] HTTP query options.
+     * @return This object for chaining.
+     */
+
+    del: function(docs /* [query], [headers], [callback] */) {
+      if (isArray(docs)) {
+        var i = 0, len, doc, data = {};
+        for (len = docs.length; i < len; i++) {
+          doc = docs[i], data[i] = {
+            _index: doc._index || doc.index,
+            _type: doc._type || doc.type,
+            _id: doc._id || doc.id,
+            _version: doc._version || doc.version,
+            _deleted: true
+          };
+        }
+        docs = data;
+        return this.post.apply(this, arguments);
+      } else {
+        // prevent acidentally deleting index
+        if (!this.name || !docs._id) throw new Error('missing type or id');
+        return this._(arguments, 1)('DELETE', docs._id);
+      }
+    }
+
+  };
+
   sage.Client.prototype.__proto__ =
   sage.Index.prototype.__proto__ =
+  sage.Type.prototype.__proto__ =
   sage.Base;
 
 })(
