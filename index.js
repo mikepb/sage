@@ -34,7 +34,7 @@ var sage = module.exports = global.sage.noConflict();
  * Patchable prototypes.
  */
 
-var Base = sage.Base;
+var Base = sage.Base.prototype;
 
 /**
  * Remove irrelevant methods.

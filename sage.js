@@ -93,32 +93,13 @@ Apache License
   /**
    * Sage library entry point.
    *
-   * @param {Array|Object|String} servers List of node URIs or map of named
-   *   nodes to URIs or a single URI.
-   * @return {Client|Function} If a list of servers is given, returns a
-   *   function to select a client, otherwise returns the client.
+   * @param {String} servers ElasticSearch server URI.
+   * @return {Client|Index} If a URI path is given, returns a `Index`,
+   *   otherwise returns a `Client`.
    */
 
-  function sage(servers) {
-    if (!servers || isString(servers)) {
-      return sage.make(servers);
-    }
-
-    var serverNames = [], name, i = 0, len;
-
-    for (name in servers) {
-      servers[name] = sage.make(servers[name]);
-      serverNames.push(name);
-    }
-
-    len = serverNames.length;
-
-    return function(name) {
-      var server;
-      if (!name) { name = serverNames[i++]; i %= len; }
-      if (!(server = servers[name])) throw new Error('no server configured');
-      return server;
-    };
+  function sage(uri) {
+    return sage.make(uri);
   }
 
   /**
@@ -191,7 +172,9 @@ Apache License
    * Encapsulates HTTP methods, JSON handling, and response coersion.
    */
 
-  sage.Base = {
+  sage.Base = function(){};
+
+  sage.Base.prototype = {
 
     /**
      * Service request and parse JSON response.
@@ -451,7 +434,7 @@ Apache License
     this._indexes = {};
   };
 
-  sage.Client.prototype = {
+  sage.Client.prototype = extend(new sage.Base(), {
 
     /**
      * Select index to manipulate.
@@ -576,7 +559,7 @@ Apache License
       return request('DELETE', '_template/' + request.p);
     }
 
-  };
+  });
 
   /**
    * Methods for ElasticSearch index.
@@ -596,7 +579,7 @@ Apache License
     this._types = {};
   };
 
-  sage.Index.prototype = {
+  sage.Index.prototype = extend(new sage.Base(), {
 
     /**
      * Select type to manipulate.
@@ -808,7 +791,7 @@ Apache License
       return this._(arguments)('GET', '_segments');
     }
 
-  };
+  });
 
   /**
    * Methods for ElasticSearch type.
@@ -828,7 +811,7 @@ Apache License
     this.auth = auth;
   };
 
-  sage.Type.prototype = {
+  sage.Type.prototype = extend(new sage.Base(), {
 
     /**
      * Fetch document.
@@ -922,12 +905,7 @@ Apache License
       }
     }
 
-  };
-
-  sage.Client.prototype.__proto__ =
-  sage.Index.prototype.__proto__ =
-  sage.Type.prototype.__proto__ =
-  sage.Base;
+  });
 
 })(
   encodeURI,
