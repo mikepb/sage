@@ -1,7 +1,7 @@
 REPORTER=dot
 
 # prefer installed scripts
-export PATH := $(CURDIR)/node_modules/.bin:/usr/local/bin:${PATH}
+PATH := $(CURDIR)/node_modules/.bin:/usr/local/bin:${PATH}
 
 OUTJS = sage.js
 MINJS = sage.min.js
@@ -12,7 +12,7 @@ test: $(MINJS)
 	@PATH=$(PATH) mocha --reporter $(REPORTER) --require 'test/shared' --bail
 
 $(MINJS): $(OUTJS)
-	uglifyjs $(OUTJS) > $(MINJS)
+	@PATH=$(PATH) uglifyjs $(OUTJS) > $(MINJS)
 	@git add $(MINJS)
 
 .PHONY: build test
