@@ -74,6 +74,7 @@ Base._request = function(method, uri, query, body, headers, auth, callback) {
     if (callback) {
       if (method === 'HEAD') data = res.headers;
       if (!err && data) data = self._response(data);
+      if (data && data.error) err = new Error(data.error);
       if (res) status = res.statusCode, headers = res.headers;
       callback(err, data, status, headers, res);
     }

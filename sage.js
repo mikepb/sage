@@ -275,6 +275,7 @@ Apache License
           }
 
           if (!err && data) data = self._response(data);
+          if (data && data.error) err = new Error(data.error);
 
           callback(err, data, xhr.status, headers, xhr);
         }
