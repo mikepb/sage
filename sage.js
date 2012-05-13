@@ -133,7 +133,7 @@ Apache License
 
     uri = sage._parseURI(uri);
 
-    if (index = /\/*([^\/]+)\/*$/.exec(uri.path)) {
+    if (uri.path && (index = /\/*([^\/]+)\/*$/.exec(uri.path))) {
       uri.path = uri.path.substr(0, index.index);
       index = index[1] && decodeURIComponent(index[1]);
     }
@@ -166,7 +166,7 @@ Apache License
       }
     }
 
-    return { host: uri || '' };
+    return { host: uri || '', path: '' };
   };
 
   /**

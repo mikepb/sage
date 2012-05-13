@@ -26,4 +26,26 @@ describe('sage', function(){
 
   });
 
+  describe('#make', function(){
+
+    it('should make client', function(){
+      var client = sage.make();
+      expect(client).to.be.a(sage.Client);
+      expect(client).to.have.property('uri', typeof window == 'undefined' ? '' : 'http://127.0.0.1:9200');
+    });
+
+    it('should make client with URI', function(){
+      var client = sage.make('http://127.0.0.1:9200');
+      expect(client).to.be.a(sage.Client);
+      expect(client).to.have.property('uri', 'http://127.0.0.1:9200');
+    });
+
+    it('should make index with URI', function(){
+      var index = sage.make('http://127.0.0.1:9200/test');
+      expect(index).to.be.a(sage.Index);
+      expect(index).to.have.property('uri', 'http://127.0.0.1:9200/test');
+    });
+
+  });
+
 });
