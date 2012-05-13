@@ -4,10 +4,7 @@ if (typeof require != 'undefined') {
 }
 
 describe('Client', function(){
-
-  before(function(){
-    this.client = new sage.Client('http://127.0.0.1:9200');
-  });
+  before(sageFactory);
 
   describe('#index', function(){
     it('should return Index object', function(){
