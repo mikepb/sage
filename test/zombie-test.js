@@ -20,17 +20,20 @@ describe('zombie', function(){
     this.browser = new zombie();
   });
 
-  it('should pass tests', visit('/'));
-  it('should pass tests for minified version', visit('/index-min.html'));
+  xit('should pass tests', visit('/'));
+  xit('should pass tests for minified version', visit('/index-min.html'));
 
   function visit(uri) {
     return function(done) {
       this.timeout(10000);
       this.browser.visit(this.uri + uri, function(err, browser){
-        if (!err) {
+        if (err) return done(err);
+        browser.wait(function(err, browser){
+          if (err) return done(err);
           expect(browser.success).to.be.ok();
-        }
-        done(err);
+          expect(browser.errors).to.be.empty();
+          expect(browser.queryAll('.test.fail')).is.empty();
+        });
       });
     };
   }

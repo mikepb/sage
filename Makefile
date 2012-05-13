@@ -9,7 +9,7 @@ MINJS = sage.min.js
 build: $(MINJS)
 
 test: $(MINJS)
-	@PATH=$(PATH) mocha --reporter $(REPORTER) --require 'test/shared' --bail
+	@PATH=$(PATH) mocha --reporter $(REPORTER) --require 'test/shared'
 
 $(MINJS): $(OUTJS)
 	@PATH=$(PATH) uglifyjs $(OUTJS) > $(MINJS)
