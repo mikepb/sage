@@ -45,9 +45,19 @@ delete Base._headers;
 delete Base._getHeaders;
 
 // auth uris are automatically handled
-Base._parseURI = function(uri) {
-  if (uri) uri = uri.replace(/\/+/g, '\/').replace(/\/+$/g, '');
-  return { host: uri || 'http://127.0.0.1:9200' };
+sage._parseURI = function(uri) {
+  var match;
+
+  if (uri) {
+    if (match = /^(https?:\/\/[^\/]*)(\/.*)\/*$/.exec(uri)) {
+      return {
+        host: match[1],
+        path: match[2].replace(/\/+/g, '\/')
+      };
+    }
+  }
+
+  return { host: uri || 'http://127.0.0.1:9200', path: '' };
 };
 
 // request-based requests
