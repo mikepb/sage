@@ -133,11 +133,12 @@ Apache License
 
     uri = sage._parseURI(uri);
 
-    if (index = /^(https?:\/\/[^\/]+).*?(\/[^\/]+)?$/.exec(uri.host)) {
-      uri.host = index[1], index = index[2] && decodeURIComponent(index[2]);
+    if (index = /\/*([^\/]+)\/*$/.exec(uri.path)) {
+      uri.path = uri.path.substr(0, index.index);
+      index = index[1] && decodeURIComponent(index[1]);
     }
 
-    client = new sage.Client(uri.host, uri);
+    client = new sage.Client(uri.host + uri.path, uri);
     return index ? client.index(index) : client;
   };
 
@@ -155,9 +156,10 @@ Apache License
     var match;
 
     if (uri) {
-      if (match = /^(https?:\/\/)(?:([^@:]+):([^@]+)@)?([^\/]+)(.*)$/.exec(uri)) {
+      if (match = /^(https?:\/\/)(?:([^@:]+):([^@]+)@)?([^\/]+)(.*)\/*$/.exec(uri)) {
         return {
           host: match[1] + match[4].replace(/\/+/g, '\/').replace(/\/+$/g, ''),
+          path: match[5],
           user: match[2] && decodeURIComponent(match[2]),
           pass: match[3] && decodeURIComponent(match[3])
         };
