@@ -1,10 +1,18 @@
 if (typeof require != 'undefined') {
   var sage = require('..')
     , expect = require('expect.js')
+    , sinon = require('sinon')
     , fs = require('fs');
 }
 
 describe('sage', function(){
+
+  it('should delegate to sage.make()', function(){
+    sinon.spy(sage, 'make');
+    sage();
+    expect(sage.make.calledOnce).to.be.ok();
+    sage.make.restore();
+  });
 
   if (fs) describe('package', function(){
 
