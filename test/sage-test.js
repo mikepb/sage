@@ -39,7 +39,7 @@ describe('sage', function(){
     it('should make client', function(){
       var client = sage.make();
       expect(client).to.be.a(sage.Client);
-      expect(client).to.have.property('uri', typeof window == 'undefined' ? 'http://127.0.0.1:9200' : '');
+      expect(client).to.have.property('uri', typeof require == 'undefined' ? '' : 'http://127.0.0.1:9200');
     });
 
     it('should make client with URI', function(){
