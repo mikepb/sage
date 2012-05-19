@@ -274,7 +274,7 @@ Apache License
             }
             if (!err) {
               if (data.error) err = new Error(data.error);
-              else if (data) data = self._response(data);
+              else data = self._response(data);
             }
           }
 
