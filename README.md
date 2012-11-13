@@ -1,6 +1,6 @@
 # sage [![Build Status](https://secure.travis-ci.org/mikepb/sage.png)](http://travis-ci.org/mikepb/sage)
 
-ElasticSearch for node and the browser
+ElasticSearch for node and the browser and sister project to [clerk][clerk]
 
 ```javascript
 var sage = require('sage');
@@ -68,5 +68,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+[clerk]: https://github.com/mikepb/clerk
 [cors]: http://www.w3.org/TR/cors/
 [mocha]: http://visionmedia.github.com/mocha/
