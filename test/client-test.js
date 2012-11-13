@@ -18,7 +18,7 @@ describe('Client', function(){
     it('should return node stats', function(done){
       this.client.stats(function(err, body, status, headers, res){
         if (!err) {
-          expect(body).to.have.property('cluster_name', 'elasticsearch');
+          expect(body).to.have.property('cluster_name');
           expect(body).to.have.property('nodes');
           shouldHave2xxStatus(status);
         }
@@ -32,7 +32,7 @@ describe('Client', function(){
       this.client.health(function(err, body, status, headers, res){
         if (!err) {
           expect(body).to.have.property('active_shards');
-          expect(body).to.have.property('cluster_name', 'elasticsearch');
+          expect(body).to.have.property('cluster_name');
           expect(body).to.have.property('status');
           shouldHave2xxStatus(status);
         }
@@ -45,7 +45,7 @@ describe('Client', function(){
     it('should return cluster state', function(done){
       this.client.state(function(err, body, status, headers, res){
         if (!err) {
-          expect(body).to.have.property('cluster_name', 'elasticsearch');
+          expect(body).to.have.property('metadata');
           expect(body).to.have.property('master_node');
           expect(body).to.have.property('nodes');
           shouldHave2xxStatus(status);
@@ -60,7 +60,7 @@ describe('Client', function(){
       this.client.nodes(function(err, body, status, headers, res){
         if (!err) {
           shouldBeOk(body);
-          expect(body).to.have.property('cluster_name', 'elasticsearch');
+          expect(body).to.have.property('cluster_name');
           expect(body).to.have.property('nodes');
           shouldHave2xxStatus(status);
         }

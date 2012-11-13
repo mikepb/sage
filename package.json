@@ -10,7 +10,7 @@
   },
   "main": ".",
   "engines": {
-    "node": "~0.6.15"
+    "node": "~0.6.15 ~0.8.14"
   },
   "dependencies": {
     "request": "~2.9.202"
