@@ -89,6 +89,21 @@ describe('Type', function(){
       });
     });
 
+    describe('#up', function(){
+      it('should return document metadata', function(done){
+        var doc = { script: 'ctx._source.foobar = "baz"' };
+        this.type.up(doc, function(err, body, status, headers, res){
+          if (!err) {
+            shouldBeOk(body);
+            expect(body).to.have.property('_index', 'sage-test');
+            shouldHaveDocInfo(body, 'type1', doc._id);
+            shouldHave2xxStatus(status);
+          }
+          done(err);
+        });
+      });
+    });
+
     describe('#del', function(){
       it('should be ok', function(done){
         var doc = this.doc;

@@ -907,6 +907,20 @@ Apache License
         if (!this.name || !docs._id) throw new Error('missing type or id');
         return this._(arguments, 1)('DELETE', docs._id);
       }
+    },
+
+    /**
+     * Update document.
+     *
+     * @param {String} doc
+     * @param {Object} [query]
+     * @param {Object} [headers]
+     * @param {Object} [callback]
+     * @return this
+     */
+
+    up: function(doc /* [query], [headers], [callback] */) {
+      return this._(arguments)('PUT', '_update', { b: doc });
     }
 
   });
