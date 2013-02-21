@@ -1,7 +1,14 @@
+0.2.2 / 2013-02-22
+==================
+
+  * Fix ElasticSearch update API usage
+  * Accept doc._id or doc.id for `Type#put`, `Type#del` and `Type#up`
+
+
 0.2.1 / 2013-02-21
 ==================
 
-  * Type#up method provides access to ElasticSearch update API
+  * `Type#up` method provides access to ElasticSearch update API
 
 
 0.2.0 / 2013-02-20
