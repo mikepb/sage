@@ -1,3 +1,9 @@
+0.2.1 / 2013-02-21
+==================
+
+  * Type#up method provides access to ElasticSearch update API
+
+
 0.2.0 / 2013-02-20
 ==================
 

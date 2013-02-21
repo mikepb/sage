@@ -82,7 +82,7 @@ describe('Index', function(){
           if (!err) {
             expect(body).to.be.an('array');
             expect(body).to.have.length(9);
-            expect(body.took).to.be.ok();
+            expect(body.took).to.be.a('number');
             expect(body.timed_out).to.be(false);
             expect(body.hits).to.not.be(undefined);
             shouldHave2xxStatus(status);
