@@ -91,8 +91,8 @@ describe('Type', function(){
 
     describe('#up', function(){
       it('should return document metadata', function(done){
-        var doc = { _id: '0', script: 'ctx._source.foobar = "baz"' };
-        this.type.up(doc, function(err, body, status, headers, res){
+        var doc = { script: 'ctx._source.foobar = "baz"' };
+        this.type.up('0', doc, function(err, body, status, headers, res){
           if (!err) {
             shouldBeOk(body);
             expect(body).to.have.property('_index', 'sage-test');

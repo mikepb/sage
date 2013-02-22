@@ -919,10 +919,10 @@ Apache License
      * @return this
      */
 
-    up: function(doc /* [query], [headers], [callback] */) {
+    up: function(id, doc /* [query], [headers], [callback] */) {
       // prevent acidentally creating index
-      if (!this.name || !doc._id && !doc.id) throw new Error('missing type or id');
-      return this._(arguments, 1)('POST', (doc._id || doc.id) + '/_update', { b: doc });
+      if (!this.name || !id) throw new Error('missing type or id');
+      return this._(arguments, 2)('POST', id + '/_update', { b: doc });
     }
 
   });
