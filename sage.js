@@ -42,18 +42,6 @@ Apache License
   };
 
   /**
-   * Check if value is a string.
-   *
-   * @param {Object} that That value to check.
-   * @return {Boolean} `true` if string, `false` otherwise.
-   * @api private
-   */
-
-  var isString = function(that) {
-    return asString(that) == '[object String]';
-  };
-
-  /**
    * Check if value is an object.
    *
    * @param {Object} that That value to check.
@@ -117,7 +105,7 @@ Apache License
    * Library version.
    */
 
-  sage.version = '0.3.0';
+  sage.version = '0.3.1-pre';
 
   /**
    * Create single ElasticSearch client.
@@ -406,8 +394,10 @@ Apache License
       args = [].slice.call(args, start);
 
       request.f = isFunction(args[args.length - 1]) && args.pop();
-      request.p = isString(args[0]) && encodeURI(args.shift()) ||
-                  isArray(args[0]) && encodeURI(args.shift().join(',')) || '';
+      request.p = args[0] && (
+                    isArray(args[0]) && encodeURI(args.shift().join(',')) ||
+                    !isObject(args[0]) && !isFunction(args[0]) && encodeURI(args.shift())
+                  ) || '';
       request.q = args[withDoc ? 1 : 0] || {};
       request.h = args[withDoc ? 2 : 1] || {};
 
@@ -450,7 +440,7 @@ Apache License
     index: function(name) {
       var indexes = this._indexes;
 
-      if (isString(name)) name = name.split(',');
+      if (name && name.split) name = name.split(',');
       name.sort();
       name = name.join(',');
 
