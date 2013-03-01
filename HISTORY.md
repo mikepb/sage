@@ -1,3 +1,9 @@
+0.3.0 / 2013-03-01
+==================
+
+  * [#1] Make `Type` methods callable on `Index` where appropriate
+
+
 0.2.2 / 2013-02-22
 ==================
 

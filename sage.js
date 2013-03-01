@@ -117,7 +117,7 @@ Apache License
    * Library version.
    */
 
-  sage.version = '0.2.3';
+  sage.version = '0.3.0';
 
   /**
    * Create single ElasticSearch client.
