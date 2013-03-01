@@ -438,7 +438,7 @@ Apache License
     this._indexes = {};
   };
 
-  sage.Client.prototype = extend(new sage.Base(), {
+  sage.Client.prototype = {
 
     /**
      * Select index to manipulate.
@@ -563,7 +563,7 @@ Apache License
       return request('DELETE', '_template/' + request.p);
     }
 
-  });
+  };
 
   /**
    * Methods for ElasticSearch index.
@@ -583,7 +583,7 @@ Apache License
     this._types = {};
   };
 
-  sage.Index.prototype = extend(new sage.Base(), {
+  sage.Index.prototype = {
 
     /**
      * Select type to manipulate.
@@ -631,29 +631,6 @@ Apache License
       };
 
       return request('HEAD');
-    },
-
-    /**
-     * Fetch documents.
-     *
-     * @param {String} [type] type.
-     * @param {String} [docs] Document descriptors.
-     * @return This object for chaining.
-     */
-
-    all: function(/* [type], [docs], [query], [headers], [callback] */) {
-      return this._(arguments, 0, 1)('GET', '_mget');
-    },
-
-    /**
-     * Search index.
-     *
-     * @param search Search body.
-     * @return This object for chaining.
-     */
-
-    find: function(/* [search], [query], [headers], [callback] */) {
-      return this._(arguments, 0, 1)('POST', '_search');
     },
 
     /**
@@ -795,7 +772,7 @@ Apache License
       return this._(arguments)('GET', '_segments');
     }
 
-  });
+  };
 
   /**
    * Methods for ElasticSearch type.
@@ -808,19 +785,41 @@ Apache License
    * @return new Type
    */
 
-  sage.Type = function(index, name, auth) {
+  sage.Type = function(index, type, auth) {
     this.index = index;
-    this.name = name;
-    this.uri = index.uri + (name ? '/' + encodeURIComponent(name) : '');
+    this.type = type;
+    this.uri = index.uri + (type ? '/' + encodeURIComponent(type) : '');
     this.auth = auth;
   };
 
-  sage.Type.prototype = extend(new sage.Base(), {
+  sage.Type.prototype = {
+
+    /**
+     * Fetch documents.
+     *
+     * @param {String} [docs] Document descriptors.
+     * @return This object for chaining.
+     */
+
+    all: function(/* [docs], [query], [headers], [callback] */) {
+      return this._(arguments, 0, 1)('GET', '_mget');
+    },
+
+    /**
+     * Search index.
+     *
+     * @param search Search body.
+     * @return This object for chaining.
+     */
+
+    find: function(/* [search], [query], [headers], [callback] */) {
+      return this._(arguments, 0, 1)('POST', '_search');
+    },
 
     /**
      * Fetch document.
      *
-     * @param {String} [typeAndId] type with document ID.
+     * @param {String} [id] document ID.
      * @return This object for chaining.
      */
 
@@ -876,7 +875,7 @@ Apache License
 
     put: function(doc /* [query], [headers], [callback] */) {
       // prevent acidentally creating index
-      if (!this.name || !doc._id && !doc.id) throw new Error('missing type or id');
+      if (!this.type || !doc._id && !doc.id) throw new Error('missing type or id');
       return this._(arguments, 1)('PUT', doc._id || doc.id, { b: doc });
     },
 
@@ -904,7 +903,7 @@ Apache License
         return this.post.apply(this, arguments);
       } else {
         // prevent acidentally deleting index
-        if (!this.name || !docs._id && !docs.id) throw new Error('missing type or id');
+        if (!this.type || !docs._id && !docs.id) throw new Error('missing type or id');
         return this._(arguments, 1)('DELETE', docs._id || docs.id);
       }
     },
@@ -921,11 +920,15 @@ Apache License
 
     up: function(id, doc /* [query], [headers], [callback] */) {
       // prevent acidentally creating index
-      if (!this.name || !id) throw new Error('missing type or id');
+      if (!this.type || !id) throw new Error('missing type or id');
       return this._(arguments, 2)('POST', id + '/_update', { b: doc });
     }
 
-  });
+  };
+
+  sage.Client.prototype = extend(new sage.Base(), sage.Client.prototype);
+  sage.Index.prototype  = extend(new sage.Base(), sage.Index.prototype, sage.Type.prototype);
+  sage.Type.prototype   = extend(new sage.Base(), sage.Type.prototype);
 
 })(
   encodeURI,
