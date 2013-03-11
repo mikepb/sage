@@ -1,6 +1,6 @@
 # sage [![Build Status](https://secure.travis-ci.org/mikepb/sage.png)](http://travis-ci.org/mikepb/sage)
 
-ElasticSearch for node and the browser and sister project to [clerk][clerk]
+ElasticSearch for Node.JS and sister project to [clerk][clerk]
 
 ```javascript
 var sage = require('sage');
@@ -19,6 +19,10 @@ client.index('search').type('email').post({
 
 });
 ```
+
+## Documentation
+
+[Sage Documentation][sage]
 
 ## Installation
 
@@ -71,3 +75,4 @@ limitations under the License.
 [clerk]: https://github.com/mikepb/clerk
 [cors]: http://www.w3.org/TR/cors/
 [mocha]: http://visionmedia.github.com/mocha/
+[sage]: http://mikepb.github.com/sage
