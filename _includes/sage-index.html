@@ -5,7 +5,7 @@
 
   <h2>Properties</h2>
 
-  <table class="table table-bordered table-striped table-hover">
+  <table class="table table-hover">
     <thead>
       <tr>
         <th>Name</th>
@@ -30,7 +30,7 @@
 
   <h2>Methods</h2>
 
-  <table class="table table-bordered table-striped table-hover">
+  <table class="table table-hover">
     <thead>
       <tr>
         <th>Name</th>
@@ -120,17 +120,64 @@
   <h3 id="sage-index-all"><a href="#sage-index">#all</a></h3>
   <p>Fetch multiple documents by type and ID via the <a href="http://www.elasticsearch.org/guide/reference/api/multi-get.html">Multi Get API</a>.</p>
 
+  {% include args-head.html %}
+  {% include arg-type.html %}
+  {% include arg-docs-required.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+esi.all({
+  docs: [
+    { _type: "type", _id: "1" },
+    { _type: "type", _id: "2" }
+  ]
+}, function(err, result){
+  console.log(result);
+});
+{% endhighlight %}
+
   <h3 id="sage-index-create"><a href="#sage-index">#create</a></h3>
   <p>Create the index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html">Create Index API</a>.</p>
+
+  {% include args-head.html %}
+  {% include arg-mapping.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+esi.create(function(err, result){
+  console.log(result); // { ok: true, acknowledged: true }
+});
+{% endhighlight %}
 
   <h3 id="sage-index-destroy"><a href="#sage-index">#destroy</a></h3>
   <p>Destroy the index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index.html">Destroy Index API</a>.</p>
 
+  {% include args-head.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+esi.destroy(function(err, result){
+  console.log(result); // { ok: true, acknowledged: true }
+});
+{% endhighlight %}
+
   <h3 id="sage-index-exists"><a href="#sage-index">#exists</a></h3>
   <p>Check if the index exists via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists.html">Indices Exists API</a>.</p>
 
-  <h3 id="sage-index-status"><a href="#sage-index">#status</a></h3>
-  <p>Get detailed status information for this index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html">Status API</a>.</p>
+  {% include args-head.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
 
 {% highlight js %}
 esi.exists(function(err, exists){
@@ -138,7 +185,48 @@ esi.exists(function(err, exists){
 });
 {% endhighlight %}
 
+  <h3 id="sage-index-status"><a href="#sage-index">#status</a></h3>
+  <p>Get detailed status information for this index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html">Status API</a>.</p>
+
+  {% include args-head.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+esi.status(function(err, result){
+  console.log(result);
+});
+{% endhighlight %}
+
+{% highlight js %}
+{ ok: true,
+  _shards: { total: 10, successful: 5, failed: 0 },
+  indices:
+   { test:
+      { index: [Object],
+        translog: [Object],
+        docs: [Object],
+        merges: [Object],
+        refresh: [Object],
+        flush: [Object],
+        shards: [Object] } } }
+{% endhighlight %}
+
   <h3 id="sage-index-type"><a href="#sage-index">#type</a></h3>
   <p>Select a document type and return a <code>Type</code> object.</p>
+
+  {% include args-head.html %}
+  {% include arg-type-required.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+est = esi.type('my-type');
+est = esi.type('my-type,that-type');
+est = esi.type(['my-type', 'that-type']);
+{% endhighlight %}
 
 </section>
