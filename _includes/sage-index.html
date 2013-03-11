@@ -39,13 +39,106 @@
     </thead>
     <tbody>
       <tr>
+        <td><a href="#sage-index-all"><code>#all</code></a></td>
+        <td>Multi Get — Fetch multiple documents by type and ID.</td>
+      </tr>
+      <!-- <tr>
+        <td><a href="#sage-index-clear"><code>#clear</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-close"><code>#close</code></a></td>
+        <td>.</td>
+      </tr> -->
+      <tr>
+        <td><a href="#sage-index-create"><code>#create</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-destroy"><code>#destroy</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-exists"><code>#exists</code></a></td>
+        <td>.</td>
+      </tr>
+      <!-- <tr>
+        <td><a href="#sage-index-find"><code>#find</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-flush"><code>#flush</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-map"><code>#map</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-open"><code>#open</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-optimize"><code>#optimize</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-refresh"><code>#refresh</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-segments"><code>#segments</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-settings"><code>#settings</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-snapshot"><code>#snapshot</code></a></td>
+        <td>.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-index-stats"><code>#stats</code></a></td>
+        <td>.</td>
+      </tr> -->
+      <tr>
+        <td><a href="#sage-index-status"><code>#status</code></a></td>
+        <td>Status — Get detailed status information for this index.</td>
+      </tr>
+      <tr>
         <td><a href="#sage-index-type"><code>#type</code></a></td>
         <td>The Sage client associated with this index.</td>
       </tr>
+      <!-- <tr>
+        <td><a href="#sage-index-unmap"><code>#unmap</code></a></td>
+        <td>.</td>
+      </tr> -->
     </tbody>
   </table>
 
-  <h3 id="sage-index-type"><code>#type</code></h3>
+  <h3 id="sage-index-all"><a href="#sage-index">#all</a></h3>
+  <p>Fetch multiple documents by type and ID via the <a href="http://www.elasticsearch.org/guide/reference/api/multi-get.html">Multi Get API</a>.</p>
+
+  <h3 id="sage-index-create"><a href="#sage-index">#create</a></h3>
+  <p>Create the index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html">Create Index API</a>.</p>
+
+  <h3 id="sage-index-destroy"><a href="#sage-index">#destroy</a></h3>
+  <p>Destroy the index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index.html">Destroy Index API</a>.</p>
+
+  <h3 id="sage-index-exists"><a href="#sage-index">#exists</a></h3>
+  <p>Check if the index exists via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists.html">Indices Exists API</a>.</p>
+
+  <h3 id="sage-index-status"><a href="#sage-index">#status</a></h3>
+  <p>Get detailed status information for this index via the <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html">Status API</a>.</p>
+
+{% highlight js %}
+esi.exists(function(err, exists){
+  console.log(exists); // true or false
+});
+{% endhighlight %}
+
+  <h3 id="sage-index-type"><a href="#sage-index">#type</a></h3>
   <p>Select a document type and return a <code>Type</code> object.</p>
 
 </section>
