@@ -1,0 +1,40 @@
+<section id="sage-usage">
+  <div class="page-header">
+    <h1>Usage</h1>
+  </div>
+
+  <h2>Installation</h2>
+
+{% highlight bash %}
+npm install sage
+{% endhighlight %}
+
+  <p>Sage exports the <code>sage</code> global object when used in the browser.</p>
+
+  <h2>Synopsis</h2>
+
+{% highlight js %}
+var sage = require('sage');
+var es   = sage();
+var esi  = es.index('my-index');
+
+esi.exists(function(err, exists){
+  console.log(exists);
+});
+{% endhighlight %}
+
+  <h2>Create a Sage Client</h2>
+
+  <p>To create a Sage client, call the exported <code>sage</code> object with an optional URI to ElasticSearch:</p>
+
+{% highlight js %}
+// create a Sage client
+es = sage();
+es = sage("http://localhost:9200");
+es = sage("http://user:pass@localhost:9200");
+
+// URI with index name
+esi = sage("http://user:pass@localhost:9200/test-index");
+{% endhighlight %}
+
+</section>
