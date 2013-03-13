@@ -8,6 +8,15 @@ body {
     display: none;
   }
 
+  /* http://css-tricks.com/hash-tag-links-padding/ */
+  [id]:before {
+    display: block;
+    content: " ";
+    margin-top: -41px;
+    height: 41px;
+    visibility: hidden;
+  }
+
 }
 
 @media (max-width: 979px) {
