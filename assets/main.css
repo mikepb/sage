@@ -27,16 +27,12 @@ body {
 
 }
 
-section {
-  padding: 41px 0 19px;
-}
-
-header {
-  padding: 60px 0 19px;
+header, section {
+  margin: 4em 0 2em;
 }
 
 footer {
   border-top: 1px solid #eeeeee;
-  margin: 41px 0 20px;
+  margin: 4em 0 2em;
   padding: 0.5em 0 0;
 }
