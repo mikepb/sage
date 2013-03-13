@@ -39,8 +39,16 @@
     </thead>
     <tbody>
       <tr>
+        <td><a href="#sage-type-all"><code>#all</code></a></td>
+        <td>Fetch multiple documents by ID.</td>
+      </tr>
+      <tr>
         <td><a href="#sage-type-del"><code>#del</code></a></td>
         <td>Remove a document from the index.</td>
+      </tr>
+      <tr>
+        <td><a href="#sage-type-find"><code>#find</code></a></td>
+        <td>Find documents for the selected type.</td>
       </tr>
       <tr>
         <td><a href="#sage-type-get"><code>#get</code></a></td>
@@ -57,16 +65,83 @@
     </tbody>
   </table>
 
+  <h3 id="sage-type-all"><a href="#sage-index">#all</a></h3>
+  <p>Fetch multiple documents by ID via the <a href="http://www.elasticsearch.org/guide/reference/api/multi-get.html">Multi Get API</a>.</p>
+
+  {% include args-head.html %}
+  {% include arg-docs-required.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+est.all({ ids: [ "1", "2" ] }, function(err, result){
+  console.log(result);
+});
+{% endhighlight %}
+
   <h3 id="sage-type-del"><a href="#sage-type">#del</a></h3>
   <p>Remove the document from the index via the <a href="http://www.elasticsearch.org/guide/reference/api/delete.html">Delete API</a>.</p>
 
+  {% include args-head.html %}
+  {% include arg-docs-required.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+est.del({ _id: '1' }, function(err, result){
+  console.log(result); // { "ok": true }
+});
+{% endhighlight %}
+
+  <h3 id="sage-type-find"><a href="#sage-type">#find</a></h3>
+  <p>Find documents for the selected type via the <a href="http://www.elasticsearch.org/guide/reference/api/search/">Search API</a>.</p>
+
   <h3 id="sage-type-get"><a href="#sage-type">#get</a></h3>
   <p>Fetch a document from the index via the <a href="http://www.elasticsearch.org/guide/reference/api/get.html">Get API</a>.</p>
+
+  {% include args-head.html %}
+  {% include arg-id.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+est.get('1', function(err, result){
+  console.log(result);
+});
+{% endhighlight %}
 
   <h3 id="sage-type-post"><a href="#sage-type">#post</a></h3>
   <p>Add or update one or more document for indexing via the <a href="http://www.elasticsearch.org/guide/reference/api/index_.html">Index API</a> or the <a href="http://www.elasticsearch.org/guide/reference/api/bulk.html">Bulk API</a>.</p>
 
   <h3 id="sage-type-put"><a href="#sage-type">#put</a></h3>
   <p>Add or update a document for indexing via the <a href="http://www.elasticsearch.org/guide/reference/api/index_.html">Index API</a>.</p>
+
+  {% include args-head.html %}
+  {% include arg-doc-required.html %}
+  {% include args-request.html %}
+  {% include args-foot.html %}
+
+  <h4>Example</h4>
+
+{% highlight js %}
+est.put('1', function(err, result){
+  console.log(result);
+});
+{% endhighlight %}
+
+{% highlight js %}
+{ ok: true,
+  _index: "test",
+  _type: "my_type",
+  _id: "1",
+  _version: 1
+}
+{% endhighlight %}
 
 </section>
