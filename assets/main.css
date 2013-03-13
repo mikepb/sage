@@ -22,7 +22,11 @@ section {
   padding: 41px 0 19px;
 }
 
-#footer {
+header {
+  padding: 60px 0 19px;
+}
+
+footer {
   border-top: 1px solid #eeeeee;
   margin: 41px 0 20px;
   padding: 0.5em 0 0;
