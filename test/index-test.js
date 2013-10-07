@@ -39,6 +39,39 @@ describe('Index', function(){
     });
   });
 
+  describe('#map', function(){
+    var mapping = {
+      'type1': {
+        properties: {
+          foo: {
+            type: 'integer'
+          }
+        }
+      }
+    };
+
+    before(createIndex);
+    after(destroyIndex);
+
+    it('should create mapping', function(done){
+      this.index.map('type1', mapping, function(err, body, status, headers, res){
+        if (!err) shouldBeOk(body);
+        done(err);
+      });
+    });
+
+    it('should get mapping', function(done){
+      this.index.map(function(err, body, status, headers, res){
+        if (!err) {
+          expect(body).to.eql({
+            'sage-test': mapping
+          })
+        }
+        done(err);
+      });
+    });
+  });
+
   describe('utils', function(){
     before(createIndex);
     after(destroyIndex);

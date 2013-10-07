@@ -706,15 +706,17 @@ Apache License
     },
 
     /**
-     * Get or set mapping.
+     * Get or put mapping.
      *
-     * @param {String} [mapping] Mapping.
+     * @param {String} [type] Type for which to get or put mapping. Required
+     *                        for put mapping.
+     * @param {Object} [mapping] The mapping object to put for the given type.
      * @return This object for chaining.
      */
 
-    map: function(/* [mapping], [query], [headers], [callback] */) {
+    map: function(/* [type], [mapping], [query], [headers], [callback] */) {
       var request = this._(arguments, 0, 1);
-      return request(request.q ? 'PUT' : 'GET',
+      return request(request.b ? 'PUT' : 'GET',
         (request.p ? request.p + '/' : '') + '_mapping'
       );
     },

@@ -2,6 +2,8 @@
 ==================
 
   * Accept scalar types for IDs
+  * Fix bug in getting mapping
+  * Fix source documentation for putting mapping
 
 
 0.3.0 / 2013-03-01
