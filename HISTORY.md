@@ -1,4 +1,4 @@
-0.4.1-pre / 0000-00-00
+0.4.1 / 2013-10-07
 ==================
 
   * Save type name as `this.name` as in online docs and to avoid conflict
