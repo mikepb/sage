@@ -105,7 +105,7 @@ Apache License
    * Library version.
    */
 
-  sage.version = '0.4.0';
+  sage.version = '0.4.1-pre';
 
   /**
    * Create single ElasticSearch client.
@@ -779,7 +779,7 @@ Apache License
 
   sage.Type = function(index, type, auth) {
     this.index = index;
-    this.type = type;
+    this.name = type;
     this.uri = index.uri + (type ? '/' + encodeURIComponent(type) : '');
     this.auth = auth;
   };
@@ -867,7 +867,7 @@ Apache License
 
     put: function(doc /* [query], [headers], [callback] */) {
       // prevent acidentally creating index
-      if (!this.type || !doc._id && !doc.id) throw new Error('missing type or id');
+      if (!this.name || !doc._id && !doc.id) throw new Error('missing type or id');
       return this._(arguments, 1)('PUT', doc._id || doc.id, { b: doc });
     },
 
@@ -895,7 +895,7 @@ Apache License
         return this.post.apply(this, arguments);
       } else {
         // prevent acidentally deleting index
-        if (!this.type || !docs._id && !docs.id) throw new Error('missing type or id');
+        if (!this.name || !docs._id && !docs.id) throw new Error('missing type or id');
         return this._(arguments, 1)('DELETE', docs._id || docs.id);
       }
     },
@@ -912,7 +912,7 @@ Apache License
 
     up: function(id, doc /* [query], [headers], [callback] */) {
       // prevent acidentally creating index
-      if (!this.type || !id) throw new Error('missing type or id');
+      if (!this.name || !id) throw new Error('missing type or id');
       return this._(arguments, 2)('POST', id + '/_update', { b: doc });
     }
 

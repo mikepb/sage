@@ -1,3 +1,10 @@
+0.4.1-pre / 0000-00-00
+==================
+
+  * Save type name as `this.name` as in online docs and to avoid conflict
+    with `index.type()`
+
+
 0.4.0 / 2013-10-07
 ==================
 
