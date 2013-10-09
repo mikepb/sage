@@ -903,6 +903,7 @@ Apache License
     /**
      * Update document.
      *
+     * @param {String} id document ID
      * @param {String} doc
      * @param {Object} [query]
      * @param {Object} [headers]
@@ -911,9 +912,22 @@ Apache License
      */
 
     up: function(id, doc /* [query], [headers], [callback] */) {
-      // prevent acidentally creating index
+      // prevent accidentally creating index
       if (!this.name || !id) throw new Error('missing type or id');
       return this._(arguments, 2)('POST', id + '/_update', { b: doc });
+    },
+
+    /**
+     * More-like-this query.
+     *
+     * @param {String} id document ID
+     * @param {Object} [query]
+     * @param {Object} [headers]
+     * @param {Object} [callback]
+     * @return this
+     */
+    mlt : function(id /*, [query], [headers], [callback] */) {
+      return this._(arguments, 1)('GET', id + '/_mlt');
     }
 
   };
