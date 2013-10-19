@@ -5,6 +5,8 @@ if (typeof require != 'undefined') {
 
 (function(){
 
+  var lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
   this.sageFactory = function() {
     this.client = sage('http://127.0.0.1:9200');
     this.index = this.client.index('sage-test');
@@ -12,10 +14,10 @@ if (typeof require != 'undefined') {
   };
 
   this.docFactory = function() {
-    this.doc = { _id: '0', hello: 'World' };
+    this.doc = { _id: '0', hello: 'World', text: lorem };
     this.docs = [];
     for (var i = 1; i < 10; i++) {
-      this.docs.push({ _id: '' + i, hello: 'World' + i });
+      this.docs.push({ _id: '' + i, hello: 'World' + i, text: lorem });
     }
   };
 

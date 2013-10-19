@@ -49,6 +49,7 @@ describe('Type', function(){
   describe('getting documents', function(){
     before(createIndex);
     before(putDocument);
+    before(bulkDocuments);
     after(destroyIndex);
 
     describe('#get', function(){
@@ -60,6 +61,25 @@ describe('Type', function(){
             expect(body).to.have.property('_source');
             shouldHaveDocInfo(body, 'type1', doc._id, doc._version);
             // shouldBeDocument(body._source, doc);
+            shouldHave2xxStatus(status);
+          }
+          done(err);
+        });
+      });
+    });
+
+    describe('#mlt', function(){
+      it('should wait for index to build', function(done){
+        this.slow(3000); setTimeout(done, 1000);
+      });
+      it('should accept more-like-this query', function(done){
+        var doc = this.doc;
+        this.type.mlt(doc._id, {
+          mlt_fields: ['text'],
+          min_doc_freq: 1
+        }, function(err, body, status, headers, res){
+          if (!err) {
+            expect(body).to.have.length(9);
             shouldHave2xxStatus(status);
           }
           done(err);

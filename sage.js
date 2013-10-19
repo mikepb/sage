@@ -927,7 +927,10 @@ Apache License
      * @return this
      */
     mlt: function(id /* [query], [headers], [callback] */) {
-      return this._(arguments, 1)('GET', id + '/_mlt');
+      var request = this._(arguments, 1)
+        , fields = request.q && request.q.mlt_fields;
+      if (isArray(fields)) request.q.mlt_fields = fields.join(',');
+      return request('GET', id + '/_mlt');
     }
 
   };
