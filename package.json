@@ -1,7 +1,7 @@
 {
   "name": "sage",
   "description": "ElasticSearch for node and the browser",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Michael Phan-Ba <michael@mikepb.com>",
   "homepage": "https://github.com/mikepb/sage",
   "repository": {
