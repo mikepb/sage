@@ -866,7 +866,7 @@ Apache License
      */
 
     put: function(doc /* [query], [headers], [callback] */) {
-      // prevent acidentally creating index
+      // prevent accidentally creating index
       if (!this.name || !doc._id && !doc.id) throw new Error('missing type or id');
       return this._(arguments, 1)('PUT', doc._id || doc.id, { b: doc });
     },
@@ -894,7 +894,7 @@ Apache License
         docs = data;
         return this.post.apply(this, arguments);
       } else {
-        // prevent acidentally deleting index
+        // prevent accidentally deleting index
         if (!this.name || !docs._id && !docs.id) throw new Error('missing type or id');
         return this._(arguments, 1)('DELETE', docs._id || docs.id);
       }
@@ -926,7 +926,7 @@ Apache License
      * @param {Object} [callback]
      * @return this
      */
-    mlt : function(id /*, [query], [headers], [callback] */) {
+    mlt: function(id /* [query], [headers], [callback] */) {
       return this._(arguments, 1)('GET', id + '/_mlt');
     }
 
