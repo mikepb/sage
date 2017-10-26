@@ -74,5 +74,5 @@ limitations under the License.
 
 [clerk]: https://github.com/mikepb/clerk
 [cors]: http://www.w3.org/TR/cors/
-[mocha]: http://visionmedia.github.com/mocha/
+[mocha]: http://mochajs.org/
 [sage]: http://mikepb.github.com/sage
